@@ -1,6 +1,5 @@
 package core;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.Scanner;
@@ -51,20 +50,12 @@ public class ConsoleCommandHandler {
                 engine.loadProperties();
                 break;
             case "debug":
-                if (engine.getProperties().debug) {
-                    engine.getProperties().debug = false;
-                } else {
-                    engine.getProperties().debug = true;
-                }
+                engine.getProperties().debug = !engine.getProperties().debug;
                 System.out.println("Debug is now " + engine.getProperties().debug);
                 break;
 
             case "showtime":
-                if (engine.getProperties().showTime) {
-                    engine.getProperties().showTime = false;
-                } else {
-                    engine.getProperties().showTime = true;
-                }
+                engine.getProperties().showTime = !engine.getProperties().showTime;
                 System.out.println("Show time is now " + engine.getProperties().showTime);
                 break;
 

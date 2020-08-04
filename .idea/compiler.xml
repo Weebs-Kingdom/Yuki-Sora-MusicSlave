@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Yuki-Music-Slave" />
+        <module name="Yuki-Sora-MusicSlave" />
       </profile>
     </annotationProcessing>
   </component>

@@ -3,11 +3,9 @@ package core;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import core.Engine;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.VoiceChannel;
-import net.dv8tion.jda.core.entities.VoiceState;
 import org.json.simple.JSONObject;
 
 import java.io.*;
@@ -17,7 +15,7 @@ public class BotRequestApi {
 
     private final String consMsgDef = "[Request API]";
 
-    private Engine engine;
+    private final Engine engine;
 
 
     private HttpServer server;

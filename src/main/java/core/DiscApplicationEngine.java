@@ -7,11 +7,10 @@ import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 
 import javax.security.auth.login.LoginException;
-import java.awt.*;
 
 public class DiscApplicationEngine {
 
-    private Engine engine;
+    private final Engine engine;
 
     private final String consMsgDef = "[Discord application]";
     private boolean isRunning = false;

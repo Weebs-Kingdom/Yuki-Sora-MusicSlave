@@ -9,20 +9,25 @@ public class Engine {
     BotRequestApi botRequestApi = new BotRequestApi(this);
     DiscApplicationEngine discApplicationEngine = new DiscApplicationEngine(this);
 
-    public void boot(){
+    public void boot(String[] args) {
         loadProperties();
         new ConsoleCommandHandler(this);
+        if (args.length >= 1)
+            if (args[0].equals("start")) {
+                botRequestApi.boot(false);
+                discApplicationEngine.startBotApplication();
+            }
     }
 
     public void saveProperties() {
-        utilityBase.printOutput(" !Saving properties!",false);
+        utilityBase.printOutput(" !Saving properties!", false);
         try {
             fileUtils.saveObject(fileUtils.home + "/properties.prop", properties);
         } catch (Exception e) {
             if (properties.debug) {
                 e.printStackTrace();
             }
-            utilityBase.printOutput(" !!!Error while saving properties - maybe no permission!!!",false);
+            utilityBase.printOutput(" !!!Error while saving properties - maybe no permission!!!", false);
         }
     }
 
@@ -32,10 +37,10 @@ public class Engine {
             properties = (Properties) fileUtils.loadObject(fileUtils.home + "/properties.prop");
         } catch (Exception e) {
             e.printStackTrace();
-            utilityBase.printOutput(" !!!Error while loading properties - maybe never created -> creating new file!!!",false);
+            utilityBase.printOutput(" !!!Error while loading properties - maybe never created -> creating new file!!!", false);
             properties = new Properties();
         }
-        if(properties == null){
+        if (properties == null) {
             properties = new Properties();
         }
     }
