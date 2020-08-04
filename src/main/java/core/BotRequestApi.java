@@ -40,7 +40,7 @@ public class BotRequestApi {
                     return;
                 }
             } else if(engine.getProperties().apiPort != 0) {
-                engine.getUtilityBase().printOutput(consMsgDef + " !Override port is active -> using port 5000 for bot api!", false);
+                engine.getUtilityBase().printOutput(consMsgDef + " !Found saved api port -> using port for bot api!", false);
                 try {
                     server = HttpServer.create(new InetSocketAddress(engine.getProperties().apiPort), 0);
                 } catch (IOException e) {
@@ -200,4 +200,6 @@ public class BotRequestApi {
                 .forEach( (String s) -> stringBuilder.append(s + "\n") );
         return stringBuilder.toString();
     }
+
+
 }

@@ -1,5 +1,6 @@
 package core;
 
+import listeners.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -40,6 +41,7 @@ public class DiscApplicationEngine {
         builder.setToken(engine.getProperties().discBotApplicationToken);
         builder.setAutoReconnect(true);
         builder.setStatus(OnlineStatus.ONLINE);
+        builder.addEventListener(new GuildVoiceLeaveEvent(engine));
         setBotApplicationGame(null, Game.GameType.DEFAULT);
         try {
             botJDA = builder.build();

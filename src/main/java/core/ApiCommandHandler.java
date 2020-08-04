@@ -66,4 +66,8 @@ public class ApiCommandHandler {
 
         return engine.getFileUtils().convertStringToJson(response);
     }
+
+    public AudioCommand getAudioCommand() {
+        return audioCommand;
+    }
 }
