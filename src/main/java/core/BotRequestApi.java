@@ -148,12 +148,12 @@ public class BotRequestApi {
             } catch (Exception e) {
                 if (engine.getProperties().debug)
                     e.printStackTrace();
-                sendResponse(httpExchange, "{ \"status\" : \"400\", \"response\" : \"Error with json file\"}", 400);
+                sendResponse(httpExchange, "{ \"status\" : \"400\", \"response\" : \"Invalid request\"}", 400);
                 engine.getUtilityBase().printOutput(consMsgDef + "!!!Error in request -> Respond: " + "400" + "!!!", true);
                 return;
             }
             if (rec == null) {
-                sendResponse(httpExchange, "{ \"status\" : \"400\", \"response\" : \"Error with json file\"}", 400);
+                sendResponse(httpExchange, "{ \"status\" : \"400\", \"response\" : \"Invalid reques\"}", 400);
                 engine.getUtilityBase().printOutput(consMsgDef + " !Respond: " + "400" + "!", true);
                 return;
             }
@@ -161,7 +161,7 @@ public class BotRequestApi {
                 sendResponse(httpExchange, rec, 200);
                 engine.getUtilityBase().printOutput(consMsgDef + " !Respond: " + rec + "!", true);
             } else {
-                sendResponse(httpExchange, "{ \"status\" : \"400\", \"response\" : \"Error with json file\"}", 400);
+                sendResponse(httpExchange, "{ \"status\" : \"400\", \"response\" : \"Invalid reques\"}", 400);
                 engine.getUtilityBase().printOutput(consMsgDef + " !Respond: " + "400" + "!", true);
             }
             engine.getUtilityBase().printOutput("---End from Api command---", false);
