@@ -1,8 +1,8 @@
 package core;
 
 import commands.audioCore.AudioCommand;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import org.json.simple.JSONObject;
 
 public class ApiCommandHandler {

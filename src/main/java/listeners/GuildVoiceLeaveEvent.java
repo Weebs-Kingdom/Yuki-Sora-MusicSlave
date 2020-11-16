@@ -1,21 +1,23 @@
 package listeners;
 
 import core.Engine;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.VoiceChannel;
-import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
+import javax.annotation.Nonnull;
 
 public class GuildVoiceLeaveEvent extends ListenerAdapter {
 
-    private Engine engine;
+    private final Engine engine;
 
     public GuildVoiceLeaveEvent(Engine engine) {
         this.engine = engine;
     }
 
     @Override
-    public void onGuildVoiceLeave(net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent event) {
+    public void onGuildVoiceLeave(net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent event) {
         if(!event.getMember().getUser().isBot()) {
             VoiceChannel vc = event.getChannelLeft();
             for (Member m:vc.getMembers()) {
