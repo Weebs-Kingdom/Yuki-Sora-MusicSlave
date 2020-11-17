@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>Yuki-Music-Slave</artifactId>
-    <version>1.0</version>
+    <version>PATCH_1.1</version>
 
     <packaging>jar</packaging>
     <properties>
