@@ -37,7 +37,6 @@ public class DiscApplicationEngine {
         isRunning = true;
 
         builder = JDABuilder.createDefault(engine.getProperties().discBotApplicationToken);
-        builder.setToken(engine.getProperties().discBotApplicationToken);
         builder.setAutoReconnect(true);
         builder.setStatus(OnlineStatus.ONLINE);
         builder.addEventListeners(new GuildVoiceLeaveEvent(engine));

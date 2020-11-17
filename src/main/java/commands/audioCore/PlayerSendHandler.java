@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.audio.AudioSendHandler;
 import java.nio.ByteBuffer;
 
 
-public class PlayerSendHandler implements AudioSendHandler{
+public class PlayerSendHandler implements AudioSendHandler {
 
     private final AudioPlayer audioPlayer;
     private AudioFrame lastFrame;
@@ -33,9 +33,8 @@ public class PlayerSendHandler implements AudioSendHandler{
 
         byte[] data = lastFrame != null ? lastFrame.getData() : null;
         lastFrame = null;
-        ByteBuffer bf = ByteBuffer.wrap(data);
 
-        return bf;
+        return ByteBuffer.wrap(data);
     }
 
     @Override

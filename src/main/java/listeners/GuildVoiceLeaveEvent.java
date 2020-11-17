@@ -10,14 +10,14 @@ import javax.annotation.Nonnull;
 
 public class GuildVoiceLeaveEvent extends ListenerAdapter {
 
-    private final Engine engine;
+    private Engine engine;
 
     public GuildVoiceLeaveEvent(Engine engine) {
         this.engine = engine;
     }
 
     @Override
-    public void onGuildVoiceLeave(net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent event) {
+    public void onGuildVoiceLeave(@Nonnull net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent event) {
         if(!event.getMember().getUser().isBot()) {
             VoiceChannel vc = event.getChannelLeft();
             for (Member m:vc.getMembers()) {

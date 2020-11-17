@@ -62,6 +62,17 @@ public class ApiCommandHandler {
             case "queue":
                 response = audioCommand.showQueue(args, m);
                 break;
+
+            case "help":
+                response =
+                        "p <url/ytsearch> - play a song\n" +
+                        "s - skip\n" +
+                        "stop - stop\n" +
+                        "sh - shuffle playlist\n" +
+                        "pl - shows playlist\n" +
+                        "add <url/ytsearch> - add song to playlist\n" +
+                        "info - shows info from current song";
+                break;
         }
 
         return engine.getFileUtils().convertStringToJson(response);
