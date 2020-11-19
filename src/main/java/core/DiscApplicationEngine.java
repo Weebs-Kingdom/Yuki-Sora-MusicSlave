@@ -1,6 +1,5 @@
 package core;
 
-import com.pengrad.telegrambot.model.Game;
 import listeners.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;

@@ -10,7 +10,7 @@ import javax.annotation.Nonnull;
 
 public class GuildVoiceLeaveEvent extends ListenerAdapter {
 
-    private Engine engine;
+    private final Engine engine;
 
     public GuildVoiceLeaveEvent(Engine engine) {
         this.engine = engine;

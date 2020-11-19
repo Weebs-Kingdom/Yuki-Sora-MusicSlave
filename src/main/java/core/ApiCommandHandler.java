@@ -9,7 +9,7 @@ public class ApiCommandHandler {
 
     private final AudioCommand audioCommand = new AudioCommand();
 
-    public JSONObject handleApiCommand(JSONObject msg, Engine engine){
+    public JSONObject handleApiCommand(JSONObject msg, Engine engine) {
         JSONObject data = (JSONObject) msg.get("data");
         String inst = "";
         String guild = "";
@@ -20,7 +20,7 @@ public class ApiCommandHandler {
             inst = (String) data.get("inst");
             guild = (String) data.get("guild");
             member = (String) data.get("member");
-        } catch (Exception e){
+        } catch (Exception e) {
         }
 
         String[] args = inst.split(" ");
@@ -30,28 +30,28 @@ public class ApiCommandHandler {
 
         try {
             g = engine.getDiscApplicationEngine().getBotJDA().getGuildById(guild);
-        } catch (Exception e){
+        } catch (Exception e) {
             engine.getUtilityBase().printOutput("Error in finding guild!", true);
         }
 
         try {
             m = g.getMemberById(member);
-        } catch (Exception e){
+        } catch (Exception e) {
             engine.getUtilityBase().printOutput("Error in finding member!", true);
         }
 
-        if(args != null)
-        if(args.length == 0||args.length == 1)
-            argsNull = inst;
-        else
-            argsNull = args[0];
+        if (args != null)
+            if (args.length == 0 || args.length == 1)
+                argsNull = inst;
+            else
+                argsNull = args[0];
         else
             return engine.getFileUtils().convertStringToJson("{ \"status\" : \"400\", \"response\" : \"Invalid request\"}");
 
         engine.getUtilityBase().printOutput("Performing command: " + argsNull + " with instructions: " + inst, true);
 
 
-        switch (argsNull.toLowerCase()){
+        switch (argsNull.toLowerCase()) {
             case "add":
                 response = audioCommand.add(args, m);
                 break;
@@ -89,13 +89,15 @@ public class ApiCommandHandler {
 
             case "help":
                 response =
-                        "{\"status\" : \"200\", \"response\" : \"p <url/ytsearch> - play a song\n" +
-                        "s - skip\n" +
-                        "stop - stops song from bein played\n" +
-                        "sh - shuffle playlist\n" +
-                        "pl - shows playlist\n" +
-                        "add <url/ytsearch> - add song to playlist\n" +
-                        "info - shows info from current song\"}";
+                        "{ \"status\" : \"200\", \"response\" : \"" +
+                                "p <url/ytsearch> - play a song\n" +
+                                "s - skip\n" +
+                                "stop - stops song from bein played\n" +
+                                "sh - shuffle playlist\n" +
+                                "pl - shows playlist\n" +
+                                "add <url/ytsearch> - add song to playlist\n" +
+                                "info - shows info from current song" +
+                                "\" }";
                 break;
         }
 
