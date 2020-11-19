@@ -89,13 +89,13 @@ public class ApiCommandHandler {
 
             case "help":
                 response =
-                        "p <url/ytsearch> - play a song\n" +
+                        "{\"status\" : \"200\", \"response\" : \"p <url/ytsearch> - play a song\n" +
                         "s - skip\n" +
                         "stop - stops song from bein played\n" +
                         "sh - shuffle playlist\n" +
                         "pl - shows playlist\n" +
                         "add <url/ytsearch> - add song to playlist\n" +
-                        "info - shows info from current song";
+                        "info - shows info from current song\"}";
                 break;
         }
 
