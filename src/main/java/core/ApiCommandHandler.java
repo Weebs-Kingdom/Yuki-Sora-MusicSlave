@@ -24,10 +24,21 @@ public class ApiCommandHandler {
         }
 
         String[] args = inst.split(" ");
+        String argsNull;
         Guild g = engine.getDiscApplicationEngine().getBotJDA().getGuildById(guild);
         Member m = g.getMemberById(member);
+        if(args != null)
+        if(args.length == 0||args.length == 1)
+            argsNull = inst;
+        else
+            argsNull = args[0];
+        else
+            return engine.getFileUtils().convertStringToJson("{ \"status\" : \"400\", \"response\" : \"Invalid request\"}");
 
-        switch (args[0].toLowerCase()){
+        engine.getUtilityBase().printOutput("Performing command: " + argsNull + " with instructions: " + inst, true);
+
+
+        switch (argsNull.toLowerCase()){
             case "add":
                 response = audioCommand.add(args, m);
                 break;

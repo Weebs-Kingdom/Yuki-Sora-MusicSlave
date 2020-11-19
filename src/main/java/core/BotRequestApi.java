@@ -164,7 +164,7 @@ public class BotRequestApi {
                 sendResponse(httpExchange, "{ \"status\" : \"400\", \"response\" : \"Invalid reques\"}", 400);
                 engine.getUtilityBase().printOutput(consMsgDef + " !Respond: " + "400" + "!", true);
             }
-            engine.getUtilityBase().printOutput("---End from Api command---", false);
+            engine.getUtilityBase().printOutput("---End from Api command---", true);
         }
     }
 
