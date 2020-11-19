@@ -25,8 +25,21 @@ public class ApiCommandHandler {
 
         String[] args = inst.split(" ");
         String argsNull;
-        Guild g = engine.getDiscApplicationEngine().getBotJDA().getGuildById(guild);
-        Member m = g.getMemberById(member);
+        Guild g = null;
+        Member m = null;
+
+        try {
+            g = engine.getDiscApplicationEngine().getBotJDA().getGuildById(guild);
+        } catch (Exception e){
+            engine.getUtilityBase().printOutput("Error in finding guild!", true);
+        }
+
+        try {
+            m = g.getMemberById(member);
+        } catch (Exception e){
+            engine.getUtilityBase().printOutput("Error in finding member!", true);
+        }
+
         if(args != null)
         if(args.length == 0||args.length == 1)
             argsNull = inst;
@@ -78,7 +91,7 @@ public class ApiCommandHandler {
                 response =
                         "p <url/ytsearch> - play a song\n" +
                         "s - skip\n" +
-                        "stop - stop\n" +
+                        "stop - stops song from bein played\n" +
                         "sh - shuffle playlist\n" +
                         "pl - shows playlist\n" +
                         "add <url/ytsearch> - add song to playlist\n" +
