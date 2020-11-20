@@ -50,7 +50,7 @@ public class ApiCommandHandler {
 
         engine.getUtilityBase().printOutput("Performing command: " + argsNull + " with instructions: " + inst, true);
 
-
+        argsNull.replace(" ", "");
         switch (argsNull.toLowerCase()) {
             case "add":
                 response = audioCommand.add(args, m);
@@ -90,17 +90,17 @@ public class ApiCommandHandler {
             case "help":
                 response =
                         "{ \"status\" : \"200\", \"response\" : \"" +
-                                "p <url/ytsearch> - play a song\n" +
+                                "p url ytsearch - play a song\n" +
                                 "s - skip\n" +
                                 "stop - stops song from bein played\n" +
                                 "sh - shuffle playlist\n" +
                                 "pl - shows playlist\n" +
-                                "add <url/ytsearch> - add song to playlist\n" +
+                                "add url ytsearch - add song to playlist\n" +
                                 "info - shows info from current song" +
                                 "\" }";
                 break;
         }
-
+        engine.getUtilityBase().printOutput("Found " + response, true);
         return engine.getFileUtils().convertStringToJson(response);
     }
 

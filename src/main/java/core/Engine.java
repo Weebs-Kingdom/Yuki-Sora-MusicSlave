@@ -16,6 +16,9 @@ public class Engine {
             if (args[0].equals("start")) {
                 botRequestApi.boot(false);
                 discApplicationEngine.startBotApplication();
+            } else if(args[0].equals("test")){
+                System.out.println(commandHandler.handleApiCommand(fileUtils.convertStringToJson("{\"data\": {\"inst\" : \"help\"}" +
+                        "}"), this));
             }
     }
 
