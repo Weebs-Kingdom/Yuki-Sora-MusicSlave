@@ -99,7 +99,7 @@ public class ConsoleCommandHandler {
                 break;
 
             case "help":
-                System.out.println("load - loads all files (override)\nsave - saves all files\nstartBot - starts the bot...UwU\nstopBot - stops the bot\ndisc token <token> - sets api token\napiport <port> - chnages api port\ndebug - turns on debug mode to see more\nshowtime - shows time at console output");
+                System.out.println("load - loads all files (override)\nsave - saves all files\nstartBot - starts the bot...UwU\nstopBot - stops the bot\ndisctoken <token> - sets api token\napiport <port> - chnages api port\ndebug - turns on debug mode to see more\nshowtime - shows time at console output");
                 break;
 
             default:

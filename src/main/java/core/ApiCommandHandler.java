@@ -31,12 +31,16 @@ public class ApiCommandHandler {
         try {
             g = engine.getDiscApplicationEngine().getBotJDA().getGuildById(guild);
         } catch (Exception e) {
+            if(engine.getProperties().debug)
+                e.printStackTrace();
             engine.getUtilityBase().printOutput("Error in finding guild!", true);
         }
 
         try {
             m = g.getMemberById(member);
         } catch (Exception e) {
+            if(engine.getProperties().debug)
+                e.printStackTrace();
             engine.getUtilityBase().printOutput("Error in finding member!", true);
         }
 
@@ -50,7 +54,7 @@ public class ApiCommandHandler {
 
         engine.getUtilityBase().printOutput("Performing command: " + argsNull + " with instructions: " + inst, true);
 
-        argsNull.replace(" ", "");
+        argsNull = argsNull.replace(" ", "");
         switch (argsNull.toLowerCase()) {
             case "add":
                 response = audioCommand.add(args, m);
@@ -99,6 +103,9 @@ public class ApiCommandHandler {
                                 "info - shows info from current song" +
                                 "\" }";
                 break;
+
+            default:
+                response = "{ \"status\" : \"400\", \"response\" : \"Command not found\"}";
         }
         engine.getUtilityBase().printOutput("Found " + response, true);
         return engine.getFileUtils().convertStringToJson(response);
