@@ -155,7 +155,7 @@ public class AudioCommand {
 
         input = Arrays.stream(args).skip(1).map(s -> " " + s).collect(Collectors.joining()).substring(1);
         if (args.length < 2) {
-            return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: Song not found\"}";
+            return "{ \"status\" : \"400\", \"response\" : \"song not found\"}";
         }
         if (input.startsWith("all")) {
             input = Arrays.stream(args).skip(2).map(s -> " " + s).collect(Collectors.joining()).substring(1);
@@ -164,13 +164,13 @@ public class AudioCommand {
             input = "ytsearch: " + input;
         }
         loadTrack(input, m);
-        return "{ \"status\" : \"200\", \"response\" : \":arrow_forward: Song is now playing\"}";
+        return "{ \"status\" : \"200\", \"response\" : \"Song is now playing\"}";
     }
 
     public String add(String[] args, Member m) {
         String input = Arrays.stream(args).skip(1).map(s -> " " + s).collect(Collectors.joining()).substring(1);
         if (args.length < 2) {
-            return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: Song not found\"}";
+            return "{ \"status\" : \"400\", \"response\" : \"Song not found\"}";
         }
         if (!(input.startsWith("http://") || input.startsWith("https://"))) {
             input = "ytsearch: " + input;
@@ -179,42 +179,42 @@ public class AudioCommand {
             input = Arrays.stream(args).skip(2).map(s -> " " + s).collect(Collectors.joining()).substring(1);
         }
         loadTrack(input, m);
-        return "{ \"status\" : \"200\", \"response\" : \":musical_note: Song added\"}";
+        return "{ \"status\" : \"200\", \"response\" : \"Song added\"}";
     }
 
     public String skip(String[] args, Member m) {
         if (isIdle(m)) {
-            return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: There is no queue\"}";
+            return "{ \"status\" : \"400\", \"response\" : \"There is no queue\"}";
         }
         for (int i = (args.length > 1 ? Integer.parseInt(args[1]) : 1); i == 1; i--) {
             skip(m);
         }
-        return "{ \"status\" : \"200\", \"response\" : \":track_next: Skipped\"}";
+        return "{ \"status\" : \"200\", \"response\" : \"skipped\"}";
     }
 
     public String stop(Member m) {
         if (isIdle(m)) {
-            return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: No queue found\"}";
+            return "{ \"status\" : \"400\", \"response\" : \"No queue found\"}";
         }
 
         getManager(m).purgeQueue();
         skip(m);
         Guild g = m.getGuild();
         g.getAudioManager().closeAudioConnection();
-        return "{ \"status\" : \"200\", \"response\" : \":stop_button: Song stopped\"}";
+        return "{ \"status\" : \"200\", \"response\" : \"Song stopped\"}";
     }
 
     public String shuffle(Member m) {
         if (isIdle(m)) {
-            return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: No list found\"}";
+            return "{ \"status\" : \"400\", \"response\" : \"No list found\"}";
         }
         getManager(m).shuffleQueue();
-        return "{ \"status\" : \"200\", \"response\" : \":twisted_rightwards_arrows: Queue shuffled\"}";
+        return "{ \"status\" : \"200\", \"response\" : \"Queue shuffled\"}";
     }
 
     public String info(Member m) {
         if (isIdle(m)) {
-            return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: No list found\"}";
+            return "{ \"status\" : \"400\", \"response\" : \"No list found\"}";
         }
 
         AudioTrack track = getPlayer(m).getPlayingTrack();
@@ -228,7 +228,7 @@ public class AudioCommand {
 
     public String showQueue(String[] args, Member m) {
         if (isIdle(m)) {
-            return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: No list found\"}";
+            return "{ \"status\" : \"400\", \"response\" : \"No list found\"}";
         }
 
         int sideNumb = args.length > 1 ? Integer.parseInt(args[1]) : 1;
