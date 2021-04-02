@@ -50,7 +50,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.2.0_229</version>
+            <version>4.2.0_214</version>
         </dependency>
         <dependency>
             <groupId>com.sedmelluq</groupId>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>LATEST</version>
+            <version>1.7.5</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
@@ -71,6 +71,11 @@
             <groupId>org.brunocvcunha.jiphy</groupId>
             <artifactId>jiphy</artifactId>
             <version>LATEST</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.8-dmr</version>
         </dependency>
         <dependency>
             <groupId>com.github.pengrad</groupId>
