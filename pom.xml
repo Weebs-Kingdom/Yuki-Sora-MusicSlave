@@ -16,9 +16,8 @@
     </properties>
     <repositories>
         <repository>
-            <id>central</id>
-            <name>bintray</name>
-            <url>https://jcenter.bintray.com</url>
+            <id>sedmelluq</id>
+            <url>https://dl.bintray.com/sedmelluq/com.sedmelluq</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
@@ -30,12 +29,12 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.2.0_214</version>
+            <version>4.2.0_229</version>
         </dependency>
         <dependency>
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
-            <version>LATEST</version>
+            <version>1.3.75</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -45,7 +44,7 @@
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
-            <version>LATEST</version>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
     <build>
