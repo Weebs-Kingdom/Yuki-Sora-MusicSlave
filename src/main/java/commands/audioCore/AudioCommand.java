@@ -12,6 +12,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import core.Engine;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import org.apache.http.client.config.RequestConfig;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,6 +28,12 @@ public class AudioCommand {
 
     public AudioCommand() {
         AudioSourceManagers.registerRemoteSources(MANAGER);
+        MANAGER.setHttpRequestConfigurator(config ->
+                RequestConfig.copy(config)
+                        .setSocketTimeout(10000)
+                        .setConnectTimeout(10000)
+                        .build()
+        );
     }
 
     private AudioPlayer createPlayer(Member author) {
