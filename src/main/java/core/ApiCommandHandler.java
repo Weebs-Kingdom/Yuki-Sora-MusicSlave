@@ -91,6 +91,10 @@ public class ApiCommandHandler {
                 response = audioCommand.showQueue(args, m);
                 break;
 
+            case "repeat":
+                response = audioCommand.repeat(m);
+                break;
+
             case "help":
                 response =
                         "{ \"status\" : \"200\", \"response\" : \"" +

@@ -174,6 +174,16 @@ public class AudioCommand {
         return "{ \"status\" : \"200\", \"response\" : \":arrow_forward: Song is now playing\"}";
     }
 
+    public String repeat(Member m){
+        if(getManager(m).getRepeatingSong() == null){
+            getManager(m).repeatSong(getPlayer(m).getPlayingTrack());
+            return "{ \"status\" : \"200\", \"response\" : \":repeat: Song is now on repeat\"}";
+        } else {
+            getManager(m).repeatSong(null);
+            return "{ \"status\" : \"200\", \"response\" : \":no_entry_sign: Repeating stopped\"}";
+        }
+    }
+
     public String add(String[] args, Member m) {
         String input = Arrays.stream(args).skip(1).map(s -> " " + s).collect(Collectors.joining()).substring(1);
         if (args.length < 2) {

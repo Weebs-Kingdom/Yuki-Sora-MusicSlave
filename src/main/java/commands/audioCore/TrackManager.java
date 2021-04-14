@@ -16,11 +16,16 @@ public class TrackManager extends AudioEventAdapter {
 
     private final AudioPlayer PLAYER;
     private final Queue<AudioInfo> queue;
+    private AudioTrack repeatingSong;
     private static Engine engine;
 
     public TrackManager(AudioPlayer player) {
         this.PLAYER = player;
         this.queue = new LinkedBlockingQueue<>();
+    }
+
+    public void repeatSong(AudioTrack song){
+        this.repeatingSong = song;
     }
 
     public void queue(AudioTrack track, Member author) {
@@ -76,7 +81,12 @@ public class TrackManager extends AudioEventAdapter {
         } catch (Exception ignored) {
         }
 
-        if (queue.isEmpty()) {
+        if(repeatingSong != null){
+            try {
+                player.playTrack(repeatingSong);
+            } catch (Exception e){
+            }
+        } else if (queue.isEmpty()) {
             try {
                 g.getAudioManager().closeAudioConnection();
             } catch (Exception e) {
@@ -87,5 +97,9 @@ public class TrackManager extends AudioEventAdapter {
             } catch (Exception e) {
             }
         }
+    }
+
+    public AudioTrack getRepeatingSong() {
+        return repeatingSong;
     }
 }
