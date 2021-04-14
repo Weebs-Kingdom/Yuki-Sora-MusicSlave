@@ -176,7 +176,8 @@ public class AudioCommand {
 
     public String repeat(Member m){
         if(getManager(m).getRepeatingSong() == null){
-            getManager(m).repeatSong(getPlayer(m).getPlayingTrack());
+            AudioInfo repeat = new AudioInfo(getPlayer(m).getPlayingTrack(), m);
+            getManager(m).repeatSong(repeat);
             return "{ \"status\" : \"200\", \"response\" : \":repeat: Song is now on repeat\"}";
         } else {
             getManager(m).repeatSong(null);
