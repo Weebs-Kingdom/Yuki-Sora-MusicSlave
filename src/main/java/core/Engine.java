@@ -5,7 +5,7 @@ public class Engine {
     UtilityBase utilityBase = new UtilityBase(this);
     Properties properties;
     FileUtils fileUtils = new FileUtils(this);
-    ApiCommandHandler commandHandler = new ApiCommandHandler();
+    ApiCommandHandler commandHandler = new ApiCommandHandler(this);
     BotRequestApi botRequestApi = new BotRequestApi(this);
     DiscApplicationEngine discApplicationEngine = new DiscApplicationEngine(this);
 

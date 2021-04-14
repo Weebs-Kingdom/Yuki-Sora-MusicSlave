@@ -25,9 +25,10 @@ public class AudioCommand {
     private final Map<Guild, Map.Entry<AudioPlayer, TrackManager>> PLAYERS = new HashMap<>();
     int added = 0;
 
-    Engine engine;
+    private Engine engine;
 
-    public AudioCommand() {
+    public AudioCommand(Engine engine) {
+        this.engine = engine;
         AudioSourceManagers.registerRemoteSources(MANAGER);
         MANAGER.setHttpRequestConfigurator(config ->
                 RequestConfig.copy(config)

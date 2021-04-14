@@ -7,7 +7,11 @@ import org.json.simple.JSONObject;
 
 public class ApiCommandHandler {
 
-    private final AudioCommand audioCommand = new AudioCommand();
+    private AudioCommand audioCommand;
+
+    public ApiCommandHandler(Engine engine) {
+        audioCommand = new AudioCommand(engine);
+    }
 
     public JSONObject handleApiCommand(JSONObject msg, Engine engine) {
         JSONObject data = (JSONObject) msg.get("data");
