@@ -42,6 +42,7 @@ public class TrackManager extends AudioEventAdapter {
                                 "Duration: " + "`[ " + UtilityBase.getTimestamp(queue.element().getTrack().getPosition()) + "/ " + UtilityBase.getTimestamp(queue.element().getTrack().getDuration()) + " ]`" + "\n" +
                                 "Author: " + queue.element().getTrack().getInfo().author + "\" }";
                         engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(Activity.playing(info));
+                        return;
                     }
                 engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(null);
             }
