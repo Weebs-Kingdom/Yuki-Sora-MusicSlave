@@ -41,12 +41,12 @@ public class TrackManager extends AudioEventAdapter {
                         String info = "Title: " + queue.element().getTrack().getInfo().title + "\n" +
                                 "Duration: " + "`[ " + UtilityBase.getTimestamp(queue.element().getTrack().getPosition()) + "/ " + UtilityBase.getTimestamp(queue.element().getTrack().getDuration()) + " ]`" + "\n" +
                                 "Author: " + queue.element().getTrack().getInfo().author + "\" }";
-                        engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(Activity.listening(info));
+                        engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(Activity.playing(info));
                     }
                 engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(null);
             }
         };
-        updateTimer.schedule(task, 1000, 1000);
+        updateTimer.schedule(task, 3000, 30000);
     }
 
     public void repeatSong() {
@@ -151,9 +151,9 @@ public class TrackManager extends AudioEventAdapter {
     }
 
     private void stopAudioConnection(){
+        vc.getGuild().getAudioManager().closeAudioConnection();
         updateTimer.cancel();
         engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(null);
-        vc.getGuild().getAudioManager().closeAudioConnection();
     }
 
     public boolean isRepeatSong() {
