@@ -24,28 +24,12 @@ public class TrackManager extends AudioEventAdapter {
     private boolean repeatSong = false;
     private Engine engine;
     private VoiceChannel vc;
-    private Timer updateTimer;
 
     public TrackManager(AudioPlayer player, VoiceChannel vc, Engine engine) {
         this.engine = engine;
         this.vc = vc;
         this.PLAYER = player;
         this.queue = new LinkedBlockingQueue<>();
-
-        updateTimer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                if(!queue.isEmpty())
-                    if(queue.element() != null){
-                        String info = "" + queue.element().getTrack().getInfo().title  + " " + queue.element().getTrack().getInfo().author;
-                        engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(Activity.listening(info));
-                        return;
-                    }
-                engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(null);
-            }
-        };
-        updateTimer.schedule(task, 3000, 30000);
     }
 
     public void repeatSong() {
@@ -139,6 +123,7 @@ public class TrackManager extends AudioEventAdapter {
                 stopAudioConnection();
             } else {
                 try {
+                    updateActivity();
                     player.startTrack(queue.element().getTrack().makeClone(), false);
                 } catch (Exception e) {
                     stopAudioConnection();
@@ -149,9 +134,13 @@ public class TrackManager extends AudioEventAdapter {
         }
     }
 
+    private void updateActivity(){
+        String info = "" + queue.element().getTrack().getInfo().title  + " " + queue.element().getTrack().getInfo().author;
+        engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(Activity.listening(info));
+    }
+
     private void stopAudioConnection(){
         vc.getGuild().getAudioManager().closeAudioConnection();
-        updateTimer.cancel();
         engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(null);
     }
 
