@@ -37,10 +37,9 @@ public class AudioCommand {
     }
 
     private AudioPlayer createPlayer(Member author) {
-        //engine.getDiscEngine().getBotJDA().getGuildById(author.getGuild().getId());
         Guild g = author.getGuild();
         AudioPlayer p = MANAGER.createPlayer();
-        TrackManager m = new TrackManager(p);
+        TrackManager m = new TrackManager(p, author.getVoiceState().getChannel());
         p.addListener(m);
 
         g.getAudioManager().setSendingHandler(new PlayerSendHandler(p));

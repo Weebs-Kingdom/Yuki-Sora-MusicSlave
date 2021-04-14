@@ -21,8 +21,10 @@ public class TrackManager extends AudioEventAdapter {
     private final Queue<AudioInfo> queue;
     private boolean repeatSong = false;
     private static Engine engine;
+    private VoiceChannel vc;
 
-    public TrackManager(AudioPlayer player) {
+    public TrackManager(AudioPlayer player, VoiceChannel vc) {
+        this.vc = vc;
         this.PLAYER = player;
         this.queue = new LinkedBlockingQueue<>();
     }
@@ -82,44 +84,54 @@ public class TrackManager extends AudioEventAdapter {
 
     @Override
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-        queue.element().getAuthor().getGuild().getAudioManager().closeAudioConnection();
+        stopAudioConnection();
     }
 
     @Override
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
-        queue.element().getAuthor().getGuild().getAudioManager().closeAudioConnection();
+        stopAudioConnection();
     }
 
     @Override
     public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs, StackTraceElement[] stackTrace) {
-        queue.element().getAuthor().getGuild().getAudioManager().closeAudioConnection();
+        stopAudioConnection();
     }
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (endReason != AudioTrackEndReason.LOAD_FAILED) {
-            AudioInfo info = queue.element();
-            if (!repeatSong) {
-                if (queue.poll() != null) {
-                    info = queue.element();
+            AudioInfo info;
+            try {
+                info = queue.element();
+                if(info == null){
+                    stopAudioConnection();
+                    return;
                 }
+            } catch (Exception e){
+                stopAudioConnection();
+                return;
             }
-            Guild g = info.getAuthor().getGuild();
+
+            if (!repeatSong) {
+                queue.poll();
+            }
 
             if (queue.isEmpty()) {
-                try {
-                    g.getAudioManager().closeAudioConnection();
-                } catch (Exception e) {
-                }
+                stopAudioConnection();
             } else {
                 try {
-                    player.playTrack(queue.element().getTrack().makeClone());
+                    player.startTrack(queue.element().getTrack().makeClone(), false);
                 } catch (Exception e) {
+                    stopAudioConnection();
                 }
             }
         } else {
-            queue.element().getAuthor().getGuild().getAudioManager().closeAudioConnection();
+            vc.getGuild().getAudioManager().closeAudioConnection();
         }
+    }
+
+    private void stopAudioConnection(){
+        vc.getGuild().getAudioManager().closeAudioConnection();
     }
 
     public boolean isRepeatSong() {
