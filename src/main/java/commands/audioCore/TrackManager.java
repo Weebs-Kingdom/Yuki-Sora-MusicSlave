@@ -2,6 +2,7 @@ package commands.audioCore;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
@@ -80,6 +81,21 @@ public class TrackManager extends AudioEventAdapter {
     }
 
     @Override
+    public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
+        queue.element().getAuthor().getGuild().getAudioManager().closeAudioConnection();
+    }
+
+    @Override
+    public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs) {
+        queue.element().getAuthor().getGuild().getAudioManager().closeAudioConnection();
+    }
+
+    @Override
+    public void onTrackStuck(AudioPlayer player, AudioTrack track, long thresholdMs, StackTraceElement[] stackTrace) {
+        queue.element().getAuthor().getGuild().getAudioManager().closeAudioConnection();
+    }
+
+    @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         if (endReason != AudioTrackEndReason.LOAD_FAILED) {
             AudioInfo info = queue.element();
@@ -97,9 +113,7 @@ public class TrackManager extends AudioEventAdapter {
                 }
             } else {
                 try {
-                    queue.element().getTrack().setPosition(0L);
-                    queue.element().getTrack().setMarker(new TrackMarker(0L, markerState -> {}));
-                    player.playTrack(queue.element().getTrack());
+                    player.playTrack(queue.element().getTrack().makeClone());
                 } catch (Exception e) {
                 }
             }

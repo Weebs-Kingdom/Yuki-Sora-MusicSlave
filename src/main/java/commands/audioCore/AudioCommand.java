@@ -175,6 +175,9 @@ public class AudioCommand {
     }
 
     public String repeat(Member m){
+        if (isIdle(m)) {
+            return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: There is no queue\"}";
+        }
         if(!getManager(m).isRepeatSong()){
             getManager(m).repeatSong();
             return "{ \"status\" : \"200\", \"response\" : \":repeat: Song is now on repeat\"}";
