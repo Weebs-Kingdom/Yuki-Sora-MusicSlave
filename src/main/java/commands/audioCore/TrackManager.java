@@ -16,7 +16,7 @@ public class TrackManager extends AudioEventAdapter {
 
     private final AudioPlayer PLAYER;
     private final Queue<AudioInfo> queue;
-    private AudioInfo repeatingSong;
+    private boolean repeatSong;
     private static Engine engine;
 
     public TrackManager(AudioPlayer player) {
@@ -24,8 +24,12 @@ public class TrackManager extends AudioEventAdapter {
         this.queue = new LinkedBlockingQueue<>();
     }
 
-    public void repeatSong(AudioInfo song){
-        this.repeatingSong = song;
+    public void repeatSong() {
+        this.repeatSong = true;
+    }
+
+    public void stopRepeat() {
+        this.repeatSong = false;
     }
 
     public void queue(AudioTrack track, Member author) {
@@ -76,18 +80,19 @@ public class TrackManager extends AudioEventAdapter {
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
         Guild g = null;
-        try {
-            g = queue.poll().getAuthor().getGuild();
-        } catch (Exception ignored) {
+        if (repeatSong) {
+            try {
+                g = queue.element().getAuthor().getGuild();
+            } catch (Exception ignored) {
+            }
+        } else {
+            try {
+                g = queue.poll().getAuthor().getGuild();
+            } catch (Exception ignored) {
+            }
         }
 
-        if(repeatingSong != null){
-            try {
-                queue.add(repeatingSong);
-                player.playTrack(repeatingSong.getTrack());
-            } catch (Exception e){
-            }
-        } else if (queue.isEmpty()) {
+        if (queue.isEmpty()) {
             try {
                 g.getAudioManager().closeAudioConnection();
             } catch (Exception e) {
@@ -100,7 +105,7 @@ public class TrackManager extends AudioEventAdapter {
         }
     }
 
-    public AudioInfo getRepeatingSong() {
-        return repeatingSong;
+    public boolean isRepeatSong() {
+        return repeatSong;
     }
 }

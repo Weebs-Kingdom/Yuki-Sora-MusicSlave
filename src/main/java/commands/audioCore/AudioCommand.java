@@ -86,7 +86,7 @@ public class AudioCommand {
         getPlayer(author);
         boolean singleSong = false;
 
-        MANAGER.setFrameBufferDuration(5000);
+        MANAGER.setFrameBufferDuration(10000);
         if (identifier.startsWith("ytsearch:"))
             singleSong = true;
         final boolean finalSingleSong = singleSong;
@@ -175,12 +175,11 @@ public class AudioCommand {
     }
 
     public String repeat(Member m){
-        if(getManager(m).getRepeatingSong() == null){
-            AudioInfo repeat = new AudioInfo(getPlayer(m).getPlayingTrack(), m);
-            getManager(m).repeatSong(repeat);
+        if(!getManager(m).isRepeatSong()){
+            getManager(m).repeatSong();
             return "{ \"status\" : \"200\", \"response\" : \":repeat: Song is now on repeat\"}";
         } else {
-            getManager(m).repeatSong(null);
+            getManager(m).stopRepeat();
             return "{ \"status\" : \"200\", \"response\" : \":no_entry_sign: Repeating stopped\"}";
         }
     }
