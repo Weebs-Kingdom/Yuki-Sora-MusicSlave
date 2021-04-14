@@ -82,6 +82,7 @@ public class TrackManager extends AudioEventAdapter {
             player.stopTrack();
         } else {
             info.getAuthor().getGuild().getAudioManager().openAudioConnection(vChan);
+            updateActivity();
         }
     }
 
@@ -123,7 +124,6 @@ public class TrackManager extends AudioEventAdapter {
                 stopAudioConnection();
             } else {
                 try {
-                    updateActivity();
                     player.startTrack(queue.element().getTrack().makeClone(), false);
                 } catch (Exception e) {
                     stopAudioConnection();
