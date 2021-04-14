@@ -4,6 +4,8 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
+import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
+import com.sedmelluq.discord.lavaplayer.track.TrackMarkerHandler;
 import core.Engine;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -79,29 +81,29 @@ public class TrackManager extends AudioEventAdapter {
 
     @Override
     public void onTrackEnd(AudioPlayer player, AudioTrack track, AudioTrackEndReason endReason) {
-        Guild g = null;
-        if (repeatSong) {
-            try {
-                g = queue.element().getAuthor().getGuild();
-            } catch (Exception ignored) {
+        if (endReason != AudioTrackEndReason.LOAD_FAILED) {
+            AudioInfo info = queue.element();
+            if (!repeatSong) {
+                if (queue.poll() != null) {
+                    info = queue.element();
+                }
             }
-        } else {
-            try {
-                g = queue.poll().getAuthor().getGuild();
-            } catch (Exception ignored) {
-            }
-        }
+            Guild g = info.getAuthor().getGuild();
 
-        if (queue.isEmpty()) {
-            try {
-                g.getAudioManager().closeAudioConnection();
-            } catch (Exception e) {
+            if (queue.isEmpty()) {
+                try {
+                    g.getAudioManager().closeAudioConnection();
+                } catch (Exception e) {
+                }
+            } else {
+                try {
+                    queue.element().getTrack().setPosition(0);
+                    player.playTrack(queue.element().getTrack());
+                } catch (Exception e) {
+                }
             }
         } else {
-            try {
-                player.playTrack(queue.element().getTrack());
-            } catch (Exception e) {
-            }
+            queue.element().getAuthor().getGuild().getAudioManager().closeAudioConnection();
         }
     }
 
