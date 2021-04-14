@@ -10,6 +10,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import core.Engine;
+import core.UtilityBase;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import org.apache.http.client.config.RequestConfig;
@@ -123,21 +124,6 @@ public class AudioCommand {
     }
 
     /**
-     * Erzeugt aus dem Timestamp in Millisekunden ein hh:mm:ss - Zeitformat.
-     *
-     * @param milis Timestamp
-     * @return Zeitformat
-     */
-    private String getTimestamp(long milis) {
-        long seconds = milis / 1000;
-        long hours = Math.floorDiv(seconds, 3600);
-        seconds = seconds - (hours * 3600);
-        long mins = Math.floorDiv(seconds, 60);
-        seconds = seconds - (mins * 60);
-        return (hours == 0 ? "" : hours + ":") + String.format("%02d", mins) + ":" + String.format("%02d", seconds);
-    }
-
-    /**
      * Returnt aus der AudioInfo eines Tracks die Informationen als String.
      *
      * @param info AudioInfo
@@ -147,7 +133,7 @@ public class AudioCommand {
         AudioTrackInfo trackInfo = info.getTrack().getInfo();
         String title = trackInfo.title;
         long length = trackInfo.length;
-        return "`[ " + getTimestamp(length) + " ]` " + title + "\n";
+        return "`[ " + UtilityBase.getTimestamp(length) + " ]` " + title + "\n";
     }
 
     public String play(String[] args, Member m) {
@@ -241,7 +227,7 @@ public class AudioCommand {
 
         return "{ \"status\" : \"200\", \"response\" : \"** :musical_note: CURRENT TRACK INFO:** :information_source:\n" +
                 "Title: " + info.title + "\n" +
-                "Duration: " + "`[ " + getTimestamp(track.getPosition()) + "/ " + getTimestamp(track.getDuration()) + " ]`" + "\n" +
+                "Duration: " + "`[ " + UtilityBase.getTimestamp(track.getPosition()) + "/ " + UtilityBase.getTimestamp(track.getDuration()) + " ]`" + "\n" +
                 "Author: " + info.author + "\" }";
     }
 

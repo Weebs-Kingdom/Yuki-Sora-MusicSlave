@@ -8,6 +8,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarkerHandler;
 import core.Engine;
+import core.UtilityBase;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -22,11 +24,28 @@ public class TrackManager extends AudioEventAdapter {
     private boolean repeatSong = false;
     private static Engine engine;
     private VoiceChannel vc;
+    private Timer updateTimer;
 
     public TrackManager(AudioPlayer player, VoiceChannel vc) {
         this.vc = vc;
         this.PLAYER = player;
         this.queue = new LinkedBlockingQueue<>();
+
+        updateTimer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if(queue != null)
+                    if(queue.element() != null){
+                        String info = "Title: " + queue.element().getTrack().getInfo().title + "\n" +
+                                "Duration: " + "`[ " + UtilityBase.getTimestamp(queue.element().getTrack().getPosition()) + "/ " + UtilityBase.getTimestamp(queue.element().getTrack().getDuration()) + " ]`" + "\n" +
+                                "Author: " + queue.element().getTrack().getInfo().author + "\" }";
+                        engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(Activity.listening(info));
+                    }
+                engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(null);
+            }
+        };
+        updateTimer.schedule(task, 1000);
     }
 
     public void repeatSong() {
@@ -131,6 +150,8 @@ public class TrackManager extends AudioEventAdapter {
     }
 
     private void stopAudioConnection(){
+        updateTimer.cancel();
+        engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(null);
         vc.getGuild().getAudioManager().closeAudioConnection();
     }
 

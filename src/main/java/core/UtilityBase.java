@@ -11,6 +11,21 @@ public class UtilityBase {
         this.engine = engine;
     }
 
+    /**
+     * Erzeugt aus dem Timestamp in Millisekunden ein hh:mm:ss - Zeitformat.
+     *
+     * @param milis Timestamp
+     * @return Zeitformat
+     */
+    public static String getTimestamp(long milis) {
+        long seconds = milis / 1000;
+        long hours = Math.floorDiv(seconds, 3600);
+        seconds = seconds - (hours * 3600);
+        long mins = Math.floorDiv(seconds, 60);
+        seconds = seconds - (mins * 60);
+        return (hours == 0 ? "" : hours + ":") + String.format("%02d", mins) + ":" + String.format("%02d", seconds);
+    }
+
     public Color convertStringToColor(String scolor) throws Exception {
         switch (scolor) {
             case "black":

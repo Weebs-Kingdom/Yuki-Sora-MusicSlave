@@ -10,6 +10,7 @@ import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
 
 public class BotRequestApi {
 
@@ -169,17 +170,18 @@ public class BotRequestApi {
     }
 
     private void sendResponse(HttpExchange httpExchange, String s, int httpCode) {
+        byte[] bs = s.getBytes(StandardCharsets.UTF_8);
         httpExchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
         httpExchange.getResponseHeaders().add("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST");
         httpExchange.getResponseHeaders().add("Access-Control-Allow-Headers", "content-type");
         OutputStream os = httpExchange.getResponseBody();
         try {
-            httpExchange.sendResponseHeaders(200, s.length());
+            httpExchange.sendResponseHeaders(200, bs.length);
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            os.write(s.getBytes());
+            os.write(bs);
         } catch (IOException e) {
             e.printStackTrace();
         }
