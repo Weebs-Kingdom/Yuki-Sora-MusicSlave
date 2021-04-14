@@ -22,11 +22,12 @@ public class TrackManager extends AudioEventAdapter {
     private final AudioPlayer PLAYER;
     private final Queue<AudioInfo> queue;
     private boolean repeatSong = false;
-    private static Engine engine;
+    private Engine engine;
     private VoiceChannel vc;
     private Timer updateTimer;
 
-    public TrackManager(AudioPlayer player, VoiceChannel vc) {
+    public TrackManager(AudioPlayer player, VoiceChannel vc, Engine engine) {
+        this.engine = engine;
         this.vc = vc;
         this.PLAYER = player;
         this.queue = new LinkedBlockingQueue<>();
@@ -35,7 +36,7 @@ public class TrackManager extends AudioEventAdapter {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if(queue != null)
+                if(!queue.isEmpty())
                     if(queue.element() != null){
                         String info = "Title: " + queue.element().getTrack().getInfo().title + "\n" +
                                 "Duration: " + "`[ " + UtilityBase.getTimestamp(queue.element().getTrack().getPosition()) + "/ " + UtilityBase.getTimestamp(queue.element().getTrack().getDuration()) + " ]`" + "\n" +

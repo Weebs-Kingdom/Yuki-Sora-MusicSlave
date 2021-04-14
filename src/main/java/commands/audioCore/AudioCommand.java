@@ -40,7 +40,7 @@ public class AudioCommand {
     private AudioPlayer createPlayer(Member author) {
         Guild g = author.getGuild();
         AudioPlayer p = MANAGER.createPlayer();
-        TrackManager m = new TrackManager(p, author.getVoiceState().getChannel());
+        TrackManager m = new TrackManager(p, author.getVoiceState().getChannel(), engine);
         p.addListener(m);
 
         g.getAudioManager().setSendingHandler(new PlayerSendHandler(p));
