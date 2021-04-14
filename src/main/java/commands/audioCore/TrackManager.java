@@ -46,7 +46,7 @@ public class TrackManager extends AudioEventAdapter {
                 engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(null);
             }
         };
-        updateTimer.schedule(task, 1000);
+        updateTimer.schedule(task, 1000, 1000);
     }
 
     public void repeatSong() {
