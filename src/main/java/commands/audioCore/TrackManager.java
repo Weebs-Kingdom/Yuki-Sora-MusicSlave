@@ -18,7 +18,7 @@ public class TrackManager extends AudioEventAdapter {
 
     private final AudioPlayer PLAYER;
     private final Queue<AudioInfo> queue;
-    private boolean repeatSong;
+    private boolean repeatSong = false;
     private static Engine engine;
 
     public TrackManager(AudioPlayer player) {
@@ -97,7 +97,8 @@ public class TrackManager extends AudioEventAdapter {
                 }
             } else {
                 try {
-                    queue.element().getTrack().setPosition(0);
+                    queue.element().getTrack().setPosition(0L);
+                    queue.element().getTrack().setMarker(new TrackMarker(0L, markerState -> {}));
                     player.playTrack(queue.element().getTrack());
                 } catch (Exception e) {
                 }
