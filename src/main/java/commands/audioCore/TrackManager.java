@@ -38,10 +38,8 @@ public class TrackManager extends AudioEventAdapter {
             public void run() {
                 if(!queue.isEmpty())
                     if(queue.element() != null){
-                        String info = "Title: " + queue.element().getTrack().getInfo().title + "\n" +
-                                "Duration: " + "`[ " + UtilityBase.getTimestamp(queue.element().getTrack().getPosition()) + "/ " + UtilityBase.getTimestamp(queue.element().getTrack().getDuration()) + " ]`" + "\n" +
-                                "Author: " + queue.element().getTrack().getInfo().author + "\" }";
-                        engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(Activity.playing(info));
+                        String info = "" + queue.element().getTrack().getInfo().title  + " " + queue.element().getTrack().getInfo().author;
+                        engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(Activity.listening(info));
                         return;
                     }
                 engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(null);
