@@ -151,11 +151,6 @@ public class TrackManager extends AudioEventAdapter {
     }
 
     private void stopAudioConnection(){
-        System.out.println(engine);
-        System.out.println(engine.getDiscApplicationEngine());
-        System.out.println(engine.getDiscApplicationEngine().getBotJDA());
-        System.out.println(engine.getDiscApplicationEngine().getBotJDA().getPresence());
-        System.out.println(engine.getDiscApplicationEngine().getBotJDA().getPresence().getActivity());
         updateTimer.cancel();
         engine.getDiscApplicationEngine().getBotJDA().getPresence().setActivity(null);
         vc.getGuild().getAudioManager().closeAudioConnection();

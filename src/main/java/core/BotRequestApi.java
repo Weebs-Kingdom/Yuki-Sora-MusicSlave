@@ -16,7 +16,7 @@ public class BotRequestApi {
 
     private final String consMsgDef = "[Request API]";
 
-    private final Engine engine;
+    private Engine engine;
 
 
     private HttpServer server;
