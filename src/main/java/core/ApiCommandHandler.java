@@ -116,6 +116,7 @@ public class ApiCommandHandler {
                 response = "{ \"status\" : \"400\", \"response\" : \"Command not found\"}";
         }
         engine.getUtilityBase().printOutput("Found " + response, true);
+
         return engine.getFileUtils().convertStringToJson(response);
     }
 

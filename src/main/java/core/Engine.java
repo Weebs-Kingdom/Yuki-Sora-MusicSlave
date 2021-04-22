@@ -5,7 +5,7 @@ public class Engine {
     UtilityBase utilityBase = new UtilityBase(this);
     Properties properties;
     FileUtils fileUtils = new FileUtils(this);
-    ApiCommandHandler commandHandler = new ApiCommandHandler(this);
+    ApiCommandHandler commandHandler;
     BotRequestApi botRequestApi = new BotRequestApi(this);
     DiscApplicationEngine discApplicationEngine = new DiscApplicationEngine(this);
 
@@ -20,6 +20,8 @@ public class Engine {
                 System.out.println(commandHandler.handleApiCommand(fileUtils.convertStringToJson("{\"data\": {\"inst\" : \"help\"}" +
                         "}"), this));
             }
+
+        commandHandler = new ApiCommandHandler(this);
     }
 
     public void saveProperties() {

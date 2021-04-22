@@ -9,13 +9,31 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
+import com.wrapper.spotify.SpotifyApi;
+import com.wrapper.spotify.SpotifyHttpManager;
+import com.wrapper.spotify.exceptions.SpotifyWebApiException;
+import com.wrapper.spotify.model_objects.credentials.ClientCredentials;
+import com.wrapper.spotify.model_objects.specification.ArtistSimplified;
+import com.wrapper.spotify.model_objects.specification.Playlist;
+import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
+import com.wrapper.spotify.model_objects.specification.Track;
+import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
+import com.wrapper.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
+import com.wrapper.spotify.requests.data.tracks.GetTrackRequest;
 import core.Engine;
 import core.UtilityBase;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import org.apache.hc.core5.http.ParseException;
 import org.apache.http.client.config.RequestConfig;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.*;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
 public class AudioCommand {
@@ -23,12 +41,19 @@ public class AudioCommand {
     private final int PLAYLIST_LIMIT = 1000;
     private final AudioPlayerManager MANAGER = new DefaultAudioPlayerManager();
     private final Map<Guild, Map.Entry<AudioPlayer, TrackManager>> PLAYERS = new HashMap<>();
-    int added = 0;
+    private int added = 0;
+    private SpotifyApi spotifyApi;
+    private ClientCredentialsRequest clientCredentialsRequest;
 
     private Engine engine;
 
     public AudioCommand(Engine engine) {
         this.engine = engine;
+
+        spotifyApi = new SpotifyApi.Builder().setRedirectUri(SpotifyHttpManager.makeUri("https://weebskingdom.com")).setClientId(engine.getProperties().spotifyClientId).setClientSecret(engine.getProperties().spotifyClientSecret).build();
+        clientCredentialsRequest = spotifyApi.clientCredentials()
+                .build();
+
         AudioSourceManagers.registerRemoteSources(MANAGER);
         MANAGER.setHttpRequestConfigurator(config ->
                 RequestConfig.copy(config)
@@ -36,6 +61,35 @@ public class AudioCommand {
                         .setConnectTimeout(10000)
                         .build()
         );
+        Timer t = new Timer();
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                authorizationCodeUri_Async();
+            }
+        };
+
+        t.schedule(tt, 100, 1*60*1000);
+    }
+
+    public void authorizationCodeUri_Async() {
+        try {
+            final CompletableFuture<ClientCredentials> clientCredentialsFuture = clientCredentialsRequest.executeAsync();
+
+            // Thread free to do other tasks...
+
+            // Example Only. Never block in production code.
+            final ClientCredentials clientCredentials = clientCredentialsFuture.join();
+
+            // Set access token for further "spotifyApi" object usage
+            spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+
+            System.out.println("Expires in: " + clientCredentials.getExpiresIn());
+        } catch (CompletionException e) {
+            System.out.println("Error: " + e.getCause().getMessage());
+        } catch (CancellationException e) {
+            System.out.println("Async operation cancelled.");
+        }
     }
 
     private AudioPlayer createPlayer(Member author) {
@@ -150,21 +204,32 @@ public class AudioCommand {
         if (args.length < 2) {
             return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: Song not found\"}";
         }
-        if (input.startsWith("all")) {
-            input = Arrays.stream(args).skip(2).map(s -> " " + s).collect(Collectors.joining()).substring(1);
+
+
+        if(input.contains("open.spotify.com/") || input.contains("spotify:playlist:") || input.contains("spotify:track:")){
+            String[] spotifyInfo = getYoutubeSearchBySpotify(input);
+            if(spotifyInfo == null){
+                return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: Song on spotify not found\"}";
+            }
+            for(String s: spotifyInfo){
+                loadTrack("ytsearch: " + s, m);
+            }
+
+            return "{ \"status\" : \"200\", \"response\" : \":arrow_forward: Song is now playing\"}";
         }
-        if (!(input.startsWith("http://") || input.startsWith("https://"))) {
+
+        if (!(input.startsWith("http://") || input.startsWith("https://")))
             input = "ytsearch: " + input;
-        }
+
         loadTrack(input, m);
         return "{ \"status\" : \"200\", \"response\" : \":arrow_forward: Song is now playing\"}";
     }
 
-    public String repeat(Member m){
+    public String repeat(Member m) {
         if (isIdle(m)) {
             return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: There is no queue\"}";
         }
-        if(!getManager(m).isRepeatSong()){
+        if (!getManager(m).isRepeatSong()) {
             getManager(m).repeatSong();
             return "{ \"status\" : \"200\", \"response\" : \":repeat: Song is now on repeat\"}";
         } else {
@@ -252,8 +317,73 @@ public class AudioCommand {
 
         String out = trackSublist.stream().collect(Collectors.joining("\n"));
         int sideNumbAll = tracks.size() >= 20 ? tracks.size() / 20 : 1;
-        return "{ \"status\" : \"200\", \"response\" : \"**CURRENT QUEUE:** :information_source: \n"
+
+        String data = "**CURRENT QUEUE:** :information_source: \n"
                 + "*[" + " Tracks | Side " + sideNumb + " / " + sideNumbAll + "]*\n\n"
-                + out + "\" }";
+                + out;
+
+        data = data.replace("\"", "\\\"");
+
+        return "{ \"status\" : \"200\", \"response\" : \"" + data +"\" }";
+    }
+
+    private String[] getYoutubeSearchBySpotify(String url){
+        if(url.contains("/track/")){
+            String[] args = url.split("/track/");
+            String id = args[1].split("\\?si=")[0];
+            try {
+                return new String[]{getTrackInfo(id)};
+            } catch (Exception e) {
+                return null;
+            }
+        } else if (url.contains("/playlist/")){
+            String[] args = url.split("/playlist/");
+            String id = args[1].split("\\?si=")[0];
+            return loadPlaylist(id);
+        } else if(url.contains("spotify:track:")){
+            String id = url.substring(14);
+            try {
+                return new String[]{getTrackInfo(id)};
+            } catch (Exception e) {
+                return null;
+            }
+        } else if(url.contains("spotify:playlist:")){
+            String id = url.substring(17);
+            return loadPlaylist(id);
+        }
+        return null;
+    }
+
+    private String[] loadPlaylist(String id){
+        Playlist pl = null;
+        try {
+            pl = spotifyApi.getPlaylist(id).build().execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        PlaylistTrack[] playlist = pl.getTracks().getItems();
+        String[] plYtSearch = new String[playlist.length];
+        for (int i = 0; i < playlist.length; i++) {
+            try {
+                plYtSearch[i] = getTrackInfo(playlist[i].getTrack().getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return plYtSearch;
+    }
+
+    private String getTrackInfo(String id) throws Exception{
+        Track t = spotifyApi.getTrack(id).build().execute();
+        return t.getName() + " " + getArtists(t);
+    }
+
+    private String getArtists(Track t){
+        String s = "";
+        for (ArtistSimplified a:t.getArtists()) {
+            s += a.getName() + " ";
+        }
+        return s.substring(0, s.length() -2);
     }
 }

@@ -83,6 +83,7 @@ public class ConsoleCommandHandler {
                 break;
 
             case "apiport":
+            {
                 String key = "";
                 try {
                     key = command.split(" ")[1];
@@ -96,6 +97,34 @@ public class ConsoleCommandHandler {
                 } catch (Exception e){
                     engine.getUtilityBase().printOutput("Invalid", false);
                 }
+            }
+                break;
+
+            case "spotifyclient":
+            {
+                String key = "";
+                try {
+                    key = command.split(" ")[1];
+                } catch (Exception e) {
+                    engine.getUtilityBase().printOutput("Invalid", false);
+                    return false;
+                }
+                engine.getProperties().spotifyClientId = key;
+            }
+                break;
+
+            case "spotifytoken":
+            case "spotifysecret":
+            {
+                String key = "";
+                try {
+                    key = command.split(" ")[1];
+                } catch (Exception e) {
+                    engine.getUtilityBase().printOutput("Invalid", false);
+                    return false;
+                }
+                engine.getProperties().spotifyClientSecret = key;
+            }
                 break;
 
             case "help":

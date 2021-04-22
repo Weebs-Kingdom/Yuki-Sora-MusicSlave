@@ -12,6 +12,8 @@ public class Properties implements Serializable {
     //Engine stuff
     public boolean debug = false;
     public boolean showTime = true;
+    public String spotifyClientId;
+    public String spotifyClientSecret;
 
     public int apiPort = 0;
 }
