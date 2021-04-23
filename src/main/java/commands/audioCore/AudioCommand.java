@@ -243,12 +243,22 @@ public class AudioCommand {
         if (args.length < 2) {
             return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: Song not found\"}";
         }
-        if (!(input.startsWith("http://") || input.startsWith("https://"))) {
+
+        if(input.contains("open.spotify.com/") || input.contains("spotify:playlist:") || input.contains("spotify:track:")){
+            String[] spotifyInfo = getYoutubeSearchBySpotify(input);
+            if(spotifyInfo == null){
+                return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: Song on spotify not found\"}";
+            }
+            for(String s: spotifyInfo){
+                loadTrack("ytsearch: " + s, m);
+            }
+
+            return "{ \"status\" : \"200\", \"response\" : \":arrow_forward: Song is now playing\"}";
+        }
+
+        if (!(input.startsWith("http://") || input.startsWith("https://")))
             input = "ytsearch: " + input;
-        }
-        if (input.startsWith("all")) {
-            input = Arrays.stream(args).skip(2).map(s -> " " + s).collect(Collectors.joining()).substring(1);
-        }
+
         loadTrack(input, m);
         return "{ \"status\" : \"200\", \"response\" : \":musical_note: Song added\"}";
     }
