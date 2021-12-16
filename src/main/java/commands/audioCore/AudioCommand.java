@@ -30,12 +30,18 @@ import org.apache.http.client.config.RequestConfig;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.sql.Time;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class AudioCommand {
@@ -331,10 +337,15 @@ public class AudioCommand {
         String out = trackSublist.stream().collect(Collectors.joining("\n"));
         int sideNumbAll = tracks.size() >= 20 ? tracks.size() / 20 : 1;
 
-        long minutes = getManager(m).getQueue().stream().mapToLong(info -> info.getTrack().getDuration()).sum();
+        long milis = getManager(m).getQueue().stream().mapToLong(info -> info.getTrack().getDuration()).sum();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        Instant t = Instant.ofEpochMilli(milis);
+
+        String timeString = formatter.format(t);
+
 
         String data = ":information_source: **CURRENT QUEUE** :information_source: \n" +
-                "*Total playlist duration: " + minutes + "*\n"
+                "*Total playlist duration: " + timeString + "*\n\n"
                 + "*[" + " Tracks | Side " + sideNumb + " / " + sideNumbAll + "]*\n" +
                 "\n\n"
                 + out;
