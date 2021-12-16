@@ -11,32 +11,18 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import com.wrapper.spotify.SpotifyApi;
 import com.wrapper.spotify.SpotifyHttpManager;
-import com.wrapper.spotify.exceptions.SpotifyWebApiException;
 import com.wrapper.spotify.model_objects.credentials.ClientCredentials;
 import com.wrapper.spotify.model_objects.specification.ArtistSimplified;
 import com.wrapper.spotify.model_objects.specification.Playlist;
 import com.wrapper.spotify.model_objects.specification.PlaylistTrack;
 import com.wrapper.spotify.model_objects.specification.Track;
-import com.wrapper.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 import com.wrapper.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
-import com.wrapper.spotify.requests.data.tracks.GetTrackRequest;
 import core.Engine;
 import core.UtilityBase;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import org.apache.hc.core5.http.ParseException;
 import org.apache.http.client.config.RequestConfig;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-import java.sql.Time;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -77,7 +63,7 @@ public class AudioCommand {
             }
         };
 
-        t.schedule(tt, 100, 1*60*1000);
+        t.schedule(tt, 100, 1 * 60 * 1000);
     }
 
     public void authorizationCodeUri_Async() {
@@ -214,12 +200,12 @@ public class AudioCommand {
         }
 
 
-        if(input.contains("open.spotify.com/") || input.contains("spotify:playlist:") || input.contains("spotify:track:")){
+        if (input.contains("open.spotify.com/") || input.contains("spotify:playlist:") || input.contains("spotify:track:")) {
             String[] spotifyInfo = getYoutubeSearchBySpotify(input);
-            if(spotifyInfo == null){
+            if (spotifyInfo == null) {
                 return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: Song on spotify not found\"}";
             }
-            for(String s: spotifyInfo){
+            for (String s : spotifyInfo) {
                 loadTrack("ytsearch: " + s, m);
             }
 
@@ -252,12 +238,12 @@ public class AudioCommand {
             return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: Song not found\"}";
         }
 
-        if(input.contains("open.spotify.com/") || input.contains("spotify:playlist:") || input.contains("spotify:track:")){
+        if (input.contains("open.spotify.com/") || input.contains("spotify:playlist:") || input.contains("spotify:track:")) {
             String[] spotifyInfo = getYoutubeSearchBySpotify(input);
-            if(spotifyInfo == null){
+            if (spotifyInfo == null) {
                 return "{ \"status\" : \"400\", \"response\" : \":no_entry_sign: Song on spotify not found\"}";
             }
-            for(String s: spotifyInfo){
+            for (String s : spotifyInfo) {
                 loadTrack("ytsearch: " + s, m);
             }
 
@@ -337,12 +323,14 @@ public class AudioCommand {
         String out = trackSublist.stream().collect(Collectors.joining("\n"));
         int sideNumbAll = tracks.size() >= 20 ? tracks.size() / 20 : 1;
 
-        long milis = getManager(m).getQueue().stream().mapToLong(info -> info.getTrack().getDuration()).sum();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        Instant t = Instant.ofEpochMilli(milis);
+        long millis = getManager(m).getQueue().stream().mapToLong(info -> info.getTrack().getDuration()).sum();
 
-        String timeString = formatter.format(t);
-
+        String timeString = String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
+                TimeUnit.MILLISECONDS.toSeconds(millis) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
 
         String data = ":information_source: **CURRENT QUEUE** :information_source: \n" +
                 "*Total playlist duration: " + timeString + "*\n\n"
@@ -352,11 +340,11 @@ public class AudioCommand {
 
         data = data.replace("\"", "\\\"");
 
-        return "{ \"status\" : \"200\", \"response\" : \"" + data +"\" }";
+        return "{ \"status\" : \"200\", \"response\" : \"" + data + "\" }";
     }
 
-    private String[] getYoutubeSearchBySpotify(String url){
-        if(url.contains("/track/")){
+    private String[] getYoutubeSearchBySpotify(String url) {
+        if (url.contains("/track/")) {
             String[] args = url.split("/track/");
             String id = args[1].split("\\?si=")[0];
             try {
@@ -364,25 +352,25 @@ public class AudioCommand {
             } catch (Exception e) {
                 return null;
             }
-        } else if (url.contains("/playlist/")){
+        } else if (url.contains("/playlist/")) {
             String[] args = url.split("/playlist/");
             String id = args[1].split("\\?si=")[0];
             return loadPlaylist(id);
-        } else if(url.contains("spotify:track:")){
+        } else if (url.contains("spotify:track:")) {
             String id = url.substring(14);
             try {
                 return new String[]{getTrackInfo(id)};
             } catch (Exception e) {
                 return null;
             }
-        } else if(url.contains("spotify:playlist:")){
+        } else if (url.contains("spotify:playlist:")) {
             String id = url.substring(17);
             return loadPlaylist(id);
         }
         return null;
     }
 
-    private String[] loadPlaylist(String id){
+    private String[] loadPlaylist(String id) {
         Playlist pl = null;
         try {
             pl = spotifyApi.getPlaylist(id).build().execute();
@@ -402,16 +390,16 @@ public class AudioCommand {
         return plYtSearch;
     }
 
-    private String getTrackInfo(String id) throws Exception{
+    private String getTrackInfo(String id) throws Exception {
         Track t = spotifyApi.getTrack(id).build().execute();
         return t.getName() + " " + getArtists(t);
     }
 
-    private String getArtists(Track t){
+    private String getArtists(Track t) {
         String s = "";
-        for (ArtistSimplified a:t.getArtists()) {
+        for (ArtistSimplified a : t.getArtists()) {
             s += a.getName() + " ";
         }
-        return s.substring(0, s.length() -2);
+        return s.substring(0, s.length() - 2);
     }
 }
