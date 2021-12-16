@@ -30,6 +30,8 @@ import org.apache.http.client.config.RequestConfig;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
@@ -304,7 +306,8 @@ public class AudioCommand {
         return "{ \"status\" : \"200\", \"response\" : \"** :musical_note: CURRENT TRACK INFO:** :information_source:\n" +
                 "Title: " + info.title + "\n" +
                 "Duration: " + "`[ " + UtilityBase.getTimestamp(track.getPosition()) + "/ " + UtilityBase.getTimestamp(track.getDuration()) + " ]`" + "\n" +
-                "Author: " + info.author + "\" }";
+                "Author: " + info.author + "\n" +
+                "URL: " + info.uri + "\" }";
     }
 
     public String showQueue(String[] args, Member m) {
@@ -328,8 +331,12 @@ public class AudioCommand {
         String out = trackSublist.stream().collect(Collectors.joining("\n"));
         int sideNumbAll = tracks.size() >= 20 ? tracks.size() / 20 : 1;
 
-        String data = "**CURRENT QUEUE:** :information_source: \n"
-                + "*[" + " Tracks | Side " + sideNumb + " / " + sideNumbAll + "]*\n\n"
+        long minutes = getManager(m).getQueue().stream().mapToLong(info -> info.getTrack().getDuration()).sum();
+
+        String data = ":information_source: **CURRENT QUEUE** :information_source: \n" +
+                "*Total playlist duration: " + minutes + "*\n"
+                + "*[" + " Tracks | Side " + sideNumb + " / " + sideNumbAll + "]*\n" +
+                "\n\n"
                 + out;
 
         data = data.replace("\"", "\\\"");

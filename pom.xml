@@ -6,7 +6,7 @@
 
     <groupId>mindcollaps.yukisora</groupId>
     <artifactId>Yuki-Music-Slave</artifactId>
-    <version>1.2.1_001</version>
+    <version>1.2.1_002</version>
 
     <packaging>jar</packaging>
     <properties>
