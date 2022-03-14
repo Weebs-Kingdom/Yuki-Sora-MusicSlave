@@ -2,16 +2,18 @@ package core;
 
 public class Engine {
 
-    UtilityBase utilityBase = new UtilityBase(this);
-    Properties properties;
-    FileUtils fileUtils = new FileUtils(this);
-    ApiCommandHandler commandHandler;
-    BotRequestApi botRequestApi = new BotRequestApi(this);
-    DiscApplicationEngine discApplicationEngine = new DiscApplicationEngine(this);
+    private final UtilityBase utilityBase = new UtilityBase(this);
+    private Properties properties;
+    private final FileUtils fileUtils = new FileUtils(this);
+    private ApiCommandHandler commandHandler;
+    private final BotRequestApi botRequestApi = new BotRequestApi(this);
+    private final DiscApplicationEngine discApplicationEngine = new DiscApplicationEngine(this);
 
     public void boot(String[] args) {
         loadProperties();
         new ConsoleCommandHandler(this);
+
+        commandHandler = new ApiCommandHandler(this);
         if (args.length >= 1)
             if (args[0].equals("start")) {
                 botRequestApi.boot(false);
@@ -20,8 +22,6 @@ public class Engine {
                 System.out.println(commandHandler.handleApiCommand(fileUtils.convertStringToJson("{\"data\": {\"inst\" : \"help\"}" +
                         "}"), this));
             }
-
-        commandHandler = new ApiCommandHandler(this);
     }
 
     public void saveProperties() {
