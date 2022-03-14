@@ -1,6 +1,7 @@
 package listeners;
 
 import core.Engine;
+import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
@@ -19,7 +20,7 @@ public class GuildVoiceLeaveEvent extends ListenerAdapter {
     @Override
     public void onGuildVoiceLeave(@Nonnull net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent event) {
         if(!event.getMember().getUser().isBot()) {
-            VoiceChannel vc = event.getChannelLeft();
+            AudioChannel vc = event.getChannelLeft();
             for (Member m:vc.getMembers()) {
                 if(m.getUser().getId().equals(engine.getDiscApplicationEngine().getBotJDA().getSelfUser().getId())){
                     if(vc.getMembers().size() == 1){
@@ -33,7 +34,7 @@ public class GuildVoiceLeaveEvent extends ListenerAdapter {
     @Override
     public void onGuildVoiceMove(GuildVoiceMoveEvent event) {
         if(!event.getMember().getUser().isBot()) {
-            VoiceChannel vc = event.getChannelLeft();
+            AudioChannel vc = event.getChannelLeft();
             for (Member m:vc.getMembers()) {
                 if(m.getUser().getId().equals(engine.getDiscApplicationEngine().getBotJDA().getSelfUser().getId())){
                     if(vc.getMembers().size() == 1){

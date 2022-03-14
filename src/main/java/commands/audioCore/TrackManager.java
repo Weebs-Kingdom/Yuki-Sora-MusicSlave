@@ -9,10 +9,7 @@ import com.sedmelluq.discord.lavaplayer.track.TrackMarker;
 import com.sedmelluq.discord.lavaplayer.track.TrackMarkerHandler;
 import core.Engine;
 import core.UtilityBase;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.*;
 
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,9 +20,9 @@ public class TrackManager extends AudioEventAdapter {
     private final Queue<AudioInfo> queue;
     private boolean repeatSong = false;
     private Engine engine;
-    private VoiceChannel vc;
+    private AudioChannel vc;
 
-    public TrackManager(AudioPlayer player, VoiceChannel vc, Engine engine) {
+    public TrackManager(AudioPlayer player, AudioChannel vc, Engine engine) {
         this.engine = engine;
         this.vc = vc;
         this.PLAYER = player;
@@ -76,7 +73,7 @@ public class TrackManager extends AudioEventAdapter {
     @Override
     public void onTrackStart(AudioPlayer player, AudioTrack track) {
         AudioInfo info = queue.element();
-        VoiceChannel vChan = info.getAuthor().getVoiceState().getChannel();
+        AudioChannel vChan = info.getAuthor().getVoiceState().getChannel();
 
         if (vChan == null) {
             player.stopTrack();
