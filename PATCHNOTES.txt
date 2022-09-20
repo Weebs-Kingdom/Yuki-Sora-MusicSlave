@@ -11,7 +11,7 @@ Bugfix
 •
 
 Improvements
-• Updated JDA version to 5.0.0-alpha.18
-• Updated Lavaplayer version to 1.3.98.4
-• Updated Spotify API version to 7.2.0
+•
+•
+•
 •
