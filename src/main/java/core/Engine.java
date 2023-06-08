@@ -48,6 +48,8 @@ public class Engine {
         if (properties == null) {
             properties = new Properties();
         }
+
+        saveProperties();
     }
 
     public void shutdown() {

@@ -4,6 +4,7 @@ import listeners.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.exceptions.InvalidTokenException;
 
 import javax.security.auth.login.LoginException;
 
@@ -41,7 +42,12 @@ public class DiscApplicationEngine {
         builder.addEventListeners(new GuildVoiceLeaveEvent(engine));
         try {
             botJDA = builder.build();
-        } catch (LoginException e) {
+        } catch (InvalidTokenException e) {
+            if(engine.getProperties().debug){e.printStackTrace();}
+            engine.getUtilityBase().printOutput(consMsgDef + " !!!Bot start failure - token invalid!!!", false);
+            isRunning = false;
+            return;
+        } catch (Exception e) {
             if(engine.getProperties().debug){e.printStackTrace();}
             engine.getUtilityBase().printOutput(consMsgDef + " !!!Bot start failure - maybe token invalid!!!", false);
             isRunning = false;
